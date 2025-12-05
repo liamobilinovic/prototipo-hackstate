@@ -3,6 +3,8 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import customtkinter as ctk
+from os import path
+import json
 
 import sv_ttk
 
@@ -31,20 +33,19 @@ def assignment_list(ass: list) -> str:
 
 # REINGRESAR TOKENS PROPIOS
 
+with open("user_config.json", mode="r") as info_user:
+    info_canva = json.load(info_user)
+
 ############################################################################
-API_URL = "https://cursos.canvas.uc.cl/"
-
-API_KEY = "8976~v6mGRCmNZ446NC7JKuk4vhGUR42h2E6RUULEKa6FJL6YMTkyRPRGuWaVRhMPWJuW"
+api_url = info_canva["API_URL"]
+api_token = info_canva["API_TOKEN"]
 ############################################################################
 
-
-canvas = Canvas(API_URL, API_KEY)
-
+canvas = Canvas(api_url, api_token)
 user = canvas.get_current_user()
 
 
-
-courses = user.get_courses() # REEMPLAZAR POR .get_favorite_courses() en caso de no reconocer los dictados actualmente
+courses = user.get_favorite_courses() # REEMPLAZAR POR .get_favorite_courses() en caso de no reconocer los dictados actualmente
 course_info = dict()
 
 for course in courses:
