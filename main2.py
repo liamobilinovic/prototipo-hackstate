@@ -2,6 +2,7 @@ from canvasapi import Canvas
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+import customtkinter as ctk
 
 import sv_ttk
 
@@ -46,17 +47,21 @@ root = tk.Tk()
 root.title("Visualizador de Canvas")
 root.geometry("800x500")
 
-left_panel = tk.Frame(
+left_panel = ctk.CTkFrame(
     root,
     width=300,
     height=500,
-    bd=2, relief=tk.GROOVE
+    border_width = 2,
+    border_color= "#4E545C",
+    fg_color= "#000000",
 )
 left_panel.pack(padx=5, pady=5, side=tk.LEFT, fill=tk.Y)
 
-right_panel = tk.Frame(
+right_panel = ctk.CTkFrame(
     root,
-    bd = 2, relief=tk.GROOVE
+    border_width = 2,
+    border_color= "#4E545C",
+    fg_color= "#000000",
 )
 right_panel.pack(padx=5, pady=5, side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
@@ -74,15 +79,18 @@ search1 = ttk.Combobox(
     left_panel,
     state = "readonly",
     values=course_list,
-    textvariable=selected_course
+    font = ("Roboto", 12),
+    textvariable=selected_course,
+    width= 25
 )
 search1.pack(pady= 10)
 
 display_label = tk.Label(
     right_panel,
     text = "Selecciona un curso para visualizar...",
-    font = ("Arial", 12),
-    justify="left"
+    font = ("Roboto", 12),
+    justify="left",
+    bg= "#000000"
 )
 display_label.pack()
 
@@ -90,9 +98,30 @@ display_course_text = tk.Label(
     right_panel,
     text = "Este es un curso de la Universidad Católica",
     justify = "left",
-    anchor="nw"
+    font = ("Roboto", 12),
+    anchor="nw",
+    bg= "#000000",
 )
 display_course_text.pack()
+
+assignment_frame = ctk.CTkFrame(
+    right_panel,
+    corner_radius= 15,
+    border_width= 2,
+    border_color= "#4E545C",
+    fg_color= "#000000",
+    width = 200,
+    height = 150
+)
+assignment_frame.pack(padx=5, pady=5, anchor="nw", fill="none", expand=True)
+
+separator_line = ttk.Separator(
+    right_panel,
+    orient="horizontal",
+    style="TSeparator"
+)
+separator_line.pack(fill="x", padx=5, pady=5)
+
 
 def update_label(event):
     current_course = selected_course.get()
