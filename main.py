@@ -300,8 +300,6 @@ def add_grade():
 
     current_row += 1
 
-
-
 final_grade = tk.StringVar(value="0.0")
 
 def calculate_final_grade():
