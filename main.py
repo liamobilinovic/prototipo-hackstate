@@ -200,6 +200,33 @@ ascii_title = tk.Label(
 ascii_title.pack(padx=5, pady=5, anchor="ne", side="bottom")
 
 
+# --------------------- Gato tierno --------------------- #
+
+cat_image = Image.open("cat.png")
+
+cat_img = ImageTk.PhotoImage(cat_image)
+cute_cat = tk.Button(
+    left_panel,
+    image=cat_img,
+    bg="#000000",
+    borderwidth=0,
+    width=100,
+    height=100,
+)
+cute_cat.pack(padx=5, pady=5, side="bottom", anchor="s")
+
+cat_message = tk.Label(
+    left_panel,
+    text="Miau!",
+    fg="white",
+    bg="#000000",
+    font=("Roboto", 10),
+    justify="center",
+    wraplength=150,
+)
+cat_message.pack(padx=5, pady=5, side="bottom", anchor="s")
+
+
 
 # ---------------- Cálculo de nota final ---------------- # 
 
