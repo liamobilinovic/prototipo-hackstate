@@ -9,9 +9,10 @@ import sv_ttk
 import datetime
 
 def assignment_list(ass: list) -> str:
-    msg = ""
+    cubos = []
 
     for assign in ass:
+        msg = ""
         nombre = assign["nombre"]
 
         try:
@@ -19,12 +20,16 @@ def assignment_list(ass: list) -> str:
             fecha = fecha.strftime("%d/%m/%y")
         except TypeError:
             fecha = None
-            msg += f"- {nombre} | Sin fecha límite\n"
+            msg += f"<< {nombre} >>\nSin fecha límite"
         else:
-            msg += f"- {nombre} | Entregar antes de {fecha}\n"
+            msg += f"<< {nombre} >>\nEntregar antes de {fecha}"
 
-    return msg
+        cubos.append(msg)
+    
+    return cubos
 
+
+# REINGRESAR TOKENS PROPIOS
 
 ############################################################################
 API_URL = "https://cursos.canvas.uc.cl/"
@@ -39,7 +44,7 @@ user = canvas.get_current_user()
 
 
 
-courses = user.get_courses()
+courses = user.get_courses() # REEMPLAZAR POR .get_favorite_courses() en caso de no reconocer los dictados actualmente
 course_info = dict()
 
 for course in courses:
@@ -62,6 +67,14 @@ for course in courses:
 root = tk.Tk()
 root.title("Visualizador de Canvas")
 root.minsize(800, 500)
+
+entry = ctk.CTkEntry(master=root,
+                               placeholder_text="CTkEntry",
+                               width=120,
+                               height=25,
+                               border_width=2,
+                               corner_radius=10)
+entry.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
 left_panel = ctk.CTkFrame(
     root,
@@ -135,16 +148,43 @@ display_course_text = tk.Label(
 )
 display_course_text.pack(anchor="w", padx=20, pady=10)
 
-assignment_frame = ctk.CTkFrame(
-    upper_right_panel,
-    corner_radius= 15,
-    border_width= 2,
-    border_color= "#4E545C",
-    fg_color= "#000000",
-    width = 200,
-    height = 150
-)
-assignment_frame.pack(padx=5, pady=5, anchor="nw", fill="none", expand=True)
+ventanas = []
+
+
+def update_label(event):
+    if len(ventanas) != 0:
+        for e in ventanas:
+            e.destroy()
+
+    current_course = selected_course.get()
+    print(current_course)
+
+    display_label.config(text= current_course)
+    display_course_text.config(text= "")
+
+    contenido = assignment_list(course_info[current_course]["assignments"])
+
+    for c in contenido:
+        assignment_frame = ctk.CTkFrame(
+        upper_right_panel,
+        corner_radius= 15,
+        border_width= 2,
+        border_color= "#4E545C",
+        fg_color= "#000000",
+        width = 200,
+        height = 150
+        )
+        assignment_frame.pack(padx=5, pady=5, anchor="nw", fill="none", expand=True)
+
+        content = ctk.CTkLabel(
+            master= assignment_frame,
+            text_color= "#ffffff",
+            bg_color= "#000000",
+            text= c
+        )
+        content.pack(padx=5, pady=5)
+
+        ventanas.append(assignment_frame)
 
 # ---------------- Cálculo de nota final ---------------- # 
 
@@ -201,12 +241,6 @@ nota_final_label = tk.Label(
 nota_final_label.grid(column=0, row=current_row, padx=10, pady=10)
 
 
-def update_label(event):
-    current_course = selected_course.get()
-    print(current_course)
-
-    display_label.config(text= current_course)
-    display_course_text.config(text= assignment_list(course_info[current_course]["assignments"]))
 
 
 def add_grade():
