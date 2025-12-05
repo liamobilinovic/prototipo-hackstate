@@ -61,31 +61,46 @@ for course in courses:
 
 root = tk.Tk()
 root.title("Visualizador de Canvas")
-root.geometry("800x500")
+root.minsize(800, 500)
 
 left_panel = ctk.CTkFrame(
     root,
-    width=300,
-    height=500,
-    border_width = 2,
-    border_color= "#4E545C",
+    width=250,
+    height=800,
     fg_color= "#000000",
 )
 left_panel.pack(padx=5, pady=5, side=tk.LEFT, fill=tk.Y)
+left_panel.pack_propagate(False)
 
 right_panel = ctk.CTkFrame(
     root,
+    fg_color= "#000000",
+)
+right_panel.pack(padx=5, pady=5, fill=tk.BOTH, expand=True)
+
+upper_right_panel = ctk.CTkFrame(
+    right_panel,
     border_width = 2,
     border_color= "#4E545C",
     fg_color= "#000000",
+    height=250,
 )
-right_panel.pack(padx=5, pady=5, side=tk.RIGHT, fill=tk.BOTH, expand=True)
+upper_right_panel.pack(padx=5, pady=5, fill=tk.BOTH, expand=True)
+
+lower_right_panel = ctk.CTkFrame(
+    right_panel,
+    border_width = 2,
+    border_color= "#4E545C",
+    fg_color= "#000000",
+    height=250,
+)
+lower_right_panel.pack(padx=5, pady=5, fill=tk.BOTH, expand=True)
 
 label1 = tk.Label(
     left_panel,
     text = "Buscar cursos: ",
     fg = "black",
-    font= ("Arial", 12)
+    font= ("Roboto", 12)
 )
 label1.pack(padx= 10, pady=10)
 
@@ -96,32 +111,32 @@ search1 = ttk.Combobox(
     state = "readonly",
     values= list(course_info.keys()),
     textvariable=selected_course,
-    width = 25,
+    width = 10,
     font = ("Roboto", 12)
 )
 search1.pack(pady= 10)
 
 display_label = tk.Label(
-    right_panel,
+    upper_right_panel,
     text = "Selecciona un curso para visualizar...",
-    font = ("Roboto", 12),
+    font = ("Roboto", 14),
     justify="left",
-    bg= "#000000"
+    anchor="nw",
 )
-display_label.pack()
+display_label.pack(padx=20, pady=10, anchor="w")
 
 display_course_text = tk.Label(
-    right_panel,
+    upper_right_panel,
     text = "Este es un curso de la Universidad Católica",
     justify = "left",
     font = ("Roboto", 12),
     anchor="nw",
     bg= "#000000",
 )
-display_course_text.pack()
+display_course_text.pack(anchor="w", padx=20, pady=10)
 
 assignment_frame = ctk.CTkFrame(
-    right_panel,
+    upper_right_panel,
     corner_radius= 15,
     border_width= 2,
     border_color= "#4E545C",
@@ -131,13 +146,180 @@ assignment_frame = ctk.CTkFrame(
 )
 assignment_frame.pack(padx=5, pady=5, anchor="nw", fill="none", expand=True)
 
+# ---------------- Cálculo de nota final ---------------- # 
+
+current_row = 2
+
+grade_variables = []
+weight_variables = []
+
+grade_calculation_frame = ctk.CTkFrame(
+    lower_right_panel,
+    corner_radius= 15,
+    border_color= "#4E545C",
+    border_width= 2,
+    fg_color= "#000000",
+    width = 250,
+    height = 250
+)
+grade_calculation_frame.pack(padx=5, pady=5, anchor="nw", fill="y", expand=True)
+
+grade_text = tk.Label(
+    grade_calculation_frame,
+    text="Cálculo de Nota Final",
+    font=("Roboto", 14),
+    justify="left",
+    anchor="nw",
+)
+grade_text.grid(column=0, row=0, padx=10, pady=10, columnspan=2)
+
+grade1_text = tk.Label(
+    grade_calculation_frame,
+    text="Nota",
+    font=("Roboto", 10),
+    justify="center",
+    anchor="nw",
+)
+grade1_text.grid(column=0, row=1, padx=10, pady=0)
+
+weight_text = tk.Label(
+    grade_calculation_frame,
+    text="Porcentaje (%)",
+    font=("Roboto", 10),
+    justify="center",
+    anchor="nw",
+)
+weight_text.grid(column=1, row=1, padx=10, pady=0)
+
+nota_final_label = tk.Label(
+    grade_calculation_frame,
+    text="Nota Final: ",
+    font=("Roboto", 12),
+    justify="left",
+    anchor="nw",
+)
+nota_final_label.grid(column=0, row=current_row, padx=10, pady=10)
+
+
 def update_label(event):
     current_course = selected_course.get()
     print(current_course)
 
     display_label.config(text= current_course)
     display_course_text.config(text= assignment_list(course_info[current_course]["assignments"]))
-        
+
+
+def add_grade():
+
+
+
+    global current_row
+
+    new_grade = tk.DoubleVar(value=0.0)
+    new_weight = tk.DoubleVar(value=0.0)
+
+    grade_variables.append(new_grade)
+    weight_variables.append(new_weight)
+
+    new_grade_entry = ctk.CTkEntry(
+        grade_calculation_frame,
+        width=100,
+        height=30,
+        placeholder_text="Nota",
+        textvariable=new_grade,
+    )
+    new_grade_entry.grid(column=0, row=current_row, padx=10, pady=5)
+
+    new_weight_entry = ctk.CTkEntry(
+        grade_calculation_frame,
+        width=100,
+        height=30,
+        placeholder_text="Porcentaje (%)",
+        textvariable=new_weight,
+    )
+    new_weight_entry.grid(column=1, row=current_row, padx=10, pady=5)
+
+    current_row += 1
+
+    nota_final_label.grid(column=0, row=current_row, padx=10, pady=10)
+
+    calculate_button.grid(column=1, row=current_row, padx=10, pady=10)
+
+    current_row += 1
+
+    add_grade_button.grid(column=0, row=current_row, padx=10, pady=10, columnspan=2)
+
+    current_row += 1
+
+def remove_grade():
+    global current_row
+
+    if grade_variables and weight_variables:
+        grade_variables.pop()
+        weight_variables.pop()
+
+        for widget in grade_calculation_frame.grid_slaves(row=current_row - 1):
+            widget.destroy()
+
+        current_row -= 1
+
+    add_remove_button.grid(column=0, row=current_row, padx=10, pady=10, columnspan=2)
+
+
+final_grade = tk.StringVar(value="0.0")
+
+def calculate_final_grade():
+    total_weight = 0.0
+    final_grade_value = 0.0
+
+    for grade_var, weight_var in zip(grade_variables, weight_variables):
+        grade = grade_var.get()
+        weight = weight_var.get()
+
+        final_grade_value += (grade * (weight / 100))
+        total_weight += weight
+
+    if total_weight != 100.0:
+        messagebox.showinfo(title = "Error", message = "El porcentaje total debe ser 100%.")
+        return
+    
+    if grade > 70 or grade < 0:
+        messagebox.showinfo(title = "Error", message = "Las notas deben estar entre 0 y 7.")
+        return
+
+    final_grade.set(f"{final_grade_value:.0f}")
+    nota_final_label.config(text=f"Nota Final: {final_grade.get()}")
+
+
+calculate_button = ctk.CTkButton(
+    grade_calculation_frame,
+    text="Calcular Nota Final",
+    width=150,
+    height=30,
+    command=calculate_final_grade,
+)
+
+add_grade_button = ctk.CTkButton(
+    grade_calculation_frame,
+    text="Agregar Nota",
+    width=150,
+    height=30,
+    fg_color="#690500",
+    command=add_grade,
+)
+
+add_remove_button = ctk.CTkButton(
+    grade_calculation_frame,
+    text="Eliminar Nota",
+    width=150,
+    height=30,
+    fg_color="#690500",
+    command=remove_grade,
+)
+
+add_grade()
+
+
 search1.bind("<<ComboboxSelected>>", update_label)
 
 
