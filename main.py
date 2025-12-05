@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import customtkinter as ctk
+from PIL import ImageTk, Image
 
 import sv_ttk
 
@@ -186,6 +187,20 @@ def update_label(event):
 
         ventanas.append(assignment_frame)
 
+# ---------------- Titulo ascii ------------------------- #
+
+image = Image.open("ascii_art.png")
+
+img = ImageTk.PhotoImage(image)
+ascii_title = tk.Label(
+    lower_right_panel,
+    image=img,
+    bg="#000000",
+)
+ascii_title.pack(padx=5, pady=5, anchor="ne", side="bottom")
+
+
+
 # ---------------- Cálculo de nota final ---------------- # 
 
 current_row = 2
@@ -285,19 +300,6 @@ def add_grade():
 
     current_row += 1
 
-def remove_grade():
-    global current_row
-
-    if grade_variables and weight_variables:
-        grade_variables.pop()
-        weight_variables.pop()
-
-        for widget in grade_calculation_frame.grid_slaves(row=current_row - 1):
-            widget.destroy()
-
-        current_row -= 1
-
-    add_remove_button.grid(column=0, row=current_row, padx=10, pady=10, columnspan=2)
 
 
 final_grade = tk.StringVar(value="0.0")
@@ -340,15 +342,6 @@ add_grade_button = ctk.CTkButton(
     height=30,
     fg_color="#690500",
     command=add_grade,
-)
-
-add_remove_button = ctk.CTkButton(
-    grade_calculation_frame,
-    text="Eliminar Nota",
-    width=150,
-    height=30,
-    fg_color="#690500",
-    command=remove_grade,
 )
 
 add_grade()
