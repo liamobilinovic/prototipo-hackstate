@@ -1,1 +1,4 @@
 # prototipo-hackstate
+Esta innovadora herramienta se presenta como una app de compañía de bajo peso al momento de navegar la estructura de CanvasUC.
+Con este programa buscamos una forma en que un estudiante pueda acceder inmediatamente a información escencial de sus cursos actuales, sin los estorbos de la web moderna (como los tiempos de carga o los pop-up de las encuestas docentes).
+Esto es posible gracias a la implementacion de la API propia de Canvas, que mediante un sencillo setup (hecho con responsabilidad) se pueda navegar en base a un token único, haciendolo accesible en cualquier momento y eliminando las pantallas de inicio de sesión.
